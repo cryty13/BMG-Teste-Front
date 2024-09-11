@@ -52,3 +52,4 @@
 Este é o projeto frontend do BMG, desenvolvido em React. Ele se conecta a um backend .NET Core 8.0 e a um banco de dados MariaDB.
 
 
+Link: https://bmg-teste.willianbuqui.dev/
