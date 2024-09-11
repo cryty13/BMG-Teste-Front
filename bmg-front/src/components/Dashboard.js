@@ -2,6 +2,8 @@
 import React, { useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { createClient, fetchClients, deleteClient } from '../api/clientApi';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faTrash, faPlus } from '@fortawesome/free-solid-svg-icons';
 
 const Dashboard = () => {
   const [formData, setFormData] = useState({ nome: '', email: '', telefone: '',cep: '', logradouro: '', complemento: '', numero: null, bairro: '', cidade: '', uf: '' });
@@ -20,6 +22,7 @@ const Dashboard = () => {
     onSuccess: (data) => {
       queryClient.setQueryData(['clients'], (oldData) => [...oldData, data]);
       setFormData({ nome: '', email: '', telefone: '',cep: '', logradouro: '', complemento: '', numero: 0, bairro: '', cidade: '', uf: '' });
+      setErrors({})
     },
   });
 
@@ -58,6 +61,9 @@ const Dashboard = () => {
     }
     if (!/^\(\d{2}\) \d{5}-\d{4}$/.test(formData.telefone)) {
       newErrors.telefone = 'Telefone deve estar no formato (00) 00000-0000';
+    }
+     if (!formData.nome || formData.nome.trim() === '') {
+      newErrors.nome = 'Nome não pode estar vazio';
     }
     return newErrors;
   };
@@ -99,7 +105,7 @@ const Dashboard = () => {
 
   return (
     <div className="container mx-auto p-4">
-      <h1 className="text-2xl font-bold mb-4">Dashboard</h1>
+      <h1 className="text-2xl font-bold mb-4">Dashboard cliente BMG</h1>
       <form onSubmit={handleSubmit} className="mb-4">
         <div className="border border-gray-300 rounded-md p-4 mt-4">
           <div className="grid grid-cols-3 gap-4">
@@ -112,6 +118,7 @@ const Dashboard = () => {
                 onChange={handleChange}
                 className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
               />
+              {errors.nome && <p className="text-red-500 text-xs mt-1">{errors.nome}</p>}
             </div>
             <div className="w-full">
               <label className="block text-sm font-medium text-gray-700">Email</label>
@@ -246,14 +253,14 @@ const Dashboard = () => {
                     onClick={() => handleExpand(index)}
                     className="text-blue-500 hover:text-blue-700"
                   >
-                    +
+                    <FontAwesomeIcon icon={faPlus} />
                   </button>
                   {item.status == true ? (
                     <button
                       onClick={() => handleDelete(item.id)}
                       className="text-red-500 hover:text-red-700 ml-2"
                     >
-                      Deletar
+                       <FontAwesomeIcon icon={faTrash} />
                     </button>
                   ) : (<></>)}
                 </td>
